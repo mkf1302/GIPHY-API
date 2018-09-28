@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" />
+  <meta charset="utf-8">
+  <title>NFL Teams</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        
+    
+    <div class="jumbotron" style="background-color: rgb(41, 107, 21) ; color: white;">
+        <h1 class="text-center">
+            <strong>
+            <i class="fa fa-newspaper-o"></i> NFL Teams</strong>
+        </h1>
+    </div>
+  <button type="button" class="btn btn-success" data-team="NFL Packers">Packers</button>
+  <button type="button" class="btn btn-danger" data-team="NFL Chiefs">Chiefs</button>
+  <button type="button" class="btn btn-info" data-team="NFL Miami Dolphins">Dolphins</button>
+  <button type="button" class="btn btn-primary" data-team="NFL Cowboys">Cowboys</button>
+  <button type="button" class="btn btn-dark" data-team="NFL Texans">Texans</button>
+  <button type="button" class="btn btn-danger" data-team="NFL Buccaneers">Bucs</button>
+  <button type="button" class="btn btn-info" data-team="NFL Jaguars">Jags</button>
+  <button type="button" class="btn btn-warning" data-team="NFL Bengals">Bengals</button>
+  <button type="button" class="btn btn-success" data-team="NFL Eagles">Eagles</button>
+  <button type="button" class="btn btn-info" data-team="NFL Titans">Titans</button>
+
+  <div id="gifs-appear-here">
+  </div>
+<br><br><br>
+    <div class="input-group mb-3">
+        <input type="text" placeholder="i.e. Vikings">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
+        </div>
+    </div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    // Event listener for all button elements
+    $("button").on("click", function() {
+      // In this case, the "this" keyword refers to the button that was clicked
+      var team = $(this).attr("data-team");
+
+      // Constructing a URL to search Giphy for the name of the team who said the quote
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        team + "&api_key=FTuVAAeRo0M5d0u50pjPEhVyg67B89Ey&limit=5";
+
+      // Performing our AJAX GET request
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+        // After the data comes back from the API
+        .then(function(response) {
+          // Storing an array of results in the results variable
+          var results = response.data;
+
+          // Looping over every result item
+          for (var i = 0; i < results.length; i++) {
+
+            // Only taking action if the photo has an appropriate rating
+            if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
+              // Creating a div for the gif
+              var gifDiv = $("<div>");
+
+              // Storing the result item's rating
+              var rating = results[i].rating;
+
+              // Creating a paragraph tag with the result item's rating
+              var p = $("<p>").text("Rating: " + rating);
+
+              // Creating an image tag
+              var teamImage = $("<img>");
+
+              // Giving the image tag a src attribute of a proprty pulled off the
+              // result item
+              teamImage.attr("src", results[i].images.fixed_height.url);
+
+              // Appending the paragraph and teamImage we created to the "gifDiv" div we created
+              gifDiv.append(p);
+              gifDiv.append(teamImage);
+
+              // Prepending the gifDiv to the "#gifs-appear-here" div in the HTML
+              $("#gifs-appear-here").prepend(gifDiv);
+            }
+          }
+        });
+    });
+    //this will be passed as the value of whatever you want to add
+    $("#button").on("click", ".button", function () {
+      this.text()
+      //  var value = $("#textvalue").val().trim();
+      //  var newButton = ("<button class='button' text="+value+">" + value + "</button>")
+      //  $("#button").append(" " + newButton + " ");
+   });
+</script>
+</div>
+</body>
+
+</html>
